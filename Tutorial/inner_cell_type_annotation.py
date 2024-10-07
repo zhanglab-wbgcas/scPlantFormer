@@ -416,11 +416,9 @@ model_config.mod2_dim = Y1.shape[1]
 print("model_config.mod2_dim ", model_config.mod2_dim)
 print("model_config.vocab_size", model_config.vocab_size)
 premodel = GPT(model_config)
-pre_train_model_name = "Leaf_1_2_9_all_8000_BatchExper" #
 
 pre_epoch = 100
-log_dir = "log/" + str(model_name) + "/"+ str(pre_epoch) + "/" + str("0.75") + "/" + pre_train_model_name + "/" #
-premodel.load_state_dict(torch.load(log_dir + 'scPlantGPT.pth'))
+premodel.load_state_dict(torch.load('Leaf_Pretrained.pth'))
 
 
 train_config = Trainer.get_default_config()
