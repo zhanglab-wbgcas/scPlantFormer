@@ -23,7 +23,6 @@ import time
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import accuracy_score
 from sklearn.neural_network import MLPClassifier
-# 定义一些分类模型
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
@@ -123,7 +122,6 @@ def same_seeds(seed):
 
 
 same_seeds(2024)
-# 定义模型
 lr = LogisticRegression()
 dt = DecisionTreeClassifier()
 knn = KNeighborsClassifier()
@@ -132,12 +130,9 @@ gnb = GaussianNB()
 
 stack = StackingClassifier(
     estimators=[('lr', lr), ('dt', dt), (' knn', knn)], )  # , Final_estimator=LogisticRegression()
-avg = VotingClassifier(estimators=[('lr', lr), ('dt ', dt), ('knn', knn)])  # ,  ( ' SVC' , SVC),  ( ' gnb' , gnb)
 
 models = {
-    'Logistic Regression 1': LogisticRegression(random_state=2024),
     'stack': stack,
-    #     'avg': avg,
 }
 
 
@@ -468,23 +463,18 @@ def GeneEmbeding(X, gap):
     num_features = (len(X[0]) + gap - 1) // gap
     shape = (num_cells, num_features, gap)
 
-    # 使用内存映射文件来存储大数组
     mmap = np.memmap('gene_embedding.dat', dtype='float32', mode='w+', shape=shape)
 
     for cell_index, single_cell in enumerate(X):
-        # 对于每个single_cell，我们已经知道特征的数量
         for feature_index in range(0, len(single_cell), gap):
             end_index = feature_index + gap
-            # 处理边界情况
             if end_index > len(single_cell):
                 feature = single_cell[-gap:]
             else:
                 feature = single_cell[feature_index:end_index]
 
-            # 将特征放入内存映射文件中相应的位置
             mmap[cell_index, feature_index // gap, :] = feature
 
-    # 刷新内存映射文件以确保所有数据都写入磁盘
     mmap.flush()
 
     print("gene_embedding.dat mmap.shape", mmap.shape)
@@ -492,15 +482,12 @@ def GeneEmbeding(X, gap):
 
 
 def getXY2(mod_paths, mod_names, gap):
-    path = "../../Datasets/Arabidopsis thaliana/Root/"
-    adata_mod = sc.read_h5ad(path + "Root_1_2_all_8000_BatchExper.h5ad")
+    adata_mod = sc.read_h5ad("Root_Pretrained.h5ad")
 
-    # step1: 获得两种模态数据并且进行预处理
     adata_mod1 = sc.read_h5ad(mod_paths[0] + mod_names[0])
     adata_mod1.var_names_make_unique()
-    adata_mod1.obs['domain_id'] = 0
     adata_mod1 = adata_mod1[:, adata_mod.var['features'].values]
-    X1 = adata_mod1.X  # obsm['X_pca']#.todense()
+    X1 = adata_mod1.X 
     if not isinstance(X1, np.ndarray):
         X1 = X1.todense()
     X1 = np.asarray(X1)
@@ -509,7 +496,7 @@ def getXY2(mod_paths, mod_names, gap):
     adata_mod2.var_names_make_unique()
     adata_mod2.obs['domain_id'] = 0
     adata_mod2 = adata_mod2[:, adata_mod.var['features'].values]
-    X2 = adata_mod2.X  # obsm['X_pca']#.todense()
+    X2 = adata_mod2.X  
     if not isinstance(X2, np.ndarray):
         X2 = X2.todense()
     X2 = np.asarray(X2)
@@ -529,7 +516,6 @@ import optuna
 
 tissues = "Root"
 path = "../../Datasets/Arabidopsis thaliana/" + tissues + "/"
-# "03SRP330542",'04SRP235541','05SRP171040','05SRP171040',"06SRP173393","06SRP166333",'07SRP169576',
 experiment1s = ['04SRP235541', ]
 experiment2s = ['05SRP171040', ]
 test_paths = [path]
@@ -546,7 +532,6 @@ for train_name in experiment1s:
             print("train_mod2.shape", Y1.shape)
 
 
-            model_name = "integration_end_v6"
             model_config = GPT.get_default_config()
             model_config.model_type = 'gpt-nano'
             model_config.vocab_size = 128
@@ -563,10 +548,8 @@ for train_name in experiment1s:
             train_config.learning_rate = 1e-3
             train_config.batch_size = 64  # 10240
             premodel = GPT(model_config)
-            # 加载保存的模型状态字典
-            pre_train_model_name = "Root_1_2_all_8000_BatchExper"
-            log_dir = "../log/" + str(model_name) + "/" + str("100") + "/" + str("0.75") + "/" + pre_train_model_name + "/"  #
-            premodel.load_state_dict(torch.load(log_dir + 'scPlantGPT.pth'))
+            pre_train_model_name = "Root_Pretrained"
+            premodel.load_state_dict(torch.load('Root_Pretrained.pth'))
 
             start = time.time()
 
