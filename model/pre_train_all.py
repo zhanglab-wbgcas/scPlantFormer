@@ -152,20 +152,6 @@ class GPT(nn.Module):
         if type_given:
             # translate from model_type to detailed configuration
             config.merge_from_dict({
-                                       # names follow the huggingface naming conventions
-                                       # GPT-1
-                                       'openai-gpt': dict(n_layer=12, n_head=12, n_embd=768),  # 117M params
-                                       # GPT-2 configs
-                                       'gpt2': dict(n_layer=12, n_head=12, n_embd=768),  # 124M params
-                                       'gpt2-medium': dict(n_layer=24, n_head=16, n_embd=1024),  # 350M params
-                                       'gpt2-large': dict(n_layer=36, n_head=20, n_embd=1280),  # 774M params
-                                       'gpt2-xl': dict(n_layer=48, n_head=25, n_embd=1600),  # 1558M params
-                                       # Gophers
-                                       'gopher-44m': dict(n_layer=8, n_head=16, n_embd=512),
-                                       # (there are a number more...)
-                                       # I made these tiny models up
-                                       'gpt-mini': dict(n_layer=6, n_head=6, n_embd=192),
-                                       'gpt-micro': dict(n_layer=4, n_head=4, n_embd=128),
                                        'gpt-nano': dict(n_layer=1, n_head=config.h, n_embd=config.n_embd),
                                    }[config.model_type])
         print("config.vocab_size, config.n_embd", config.vocab_size, config.n_embd)
@@ -380,23 +366,19 @@ def GeneEmbeding(X, gap):
     num_features = (len(X[0]) + gap - 1) // gap
     shape = (num_cells, num_features, gap)
 
-    # 使用内存映射文件来存储大数组
     mmap = np.memmap('gene_embedding.dat', dtype='float32', mode='w+', shape=shape)
 
     for cell_index, single_cell in enumerate(X):
         # 对于每个single_cell，我们已经知道特征的数量
         for feature_index in range(0, len(single_cell), gap):
             end_index = feature_index + gap
-            # 处理边界情况
             if end_index > len(single_cell):
                 feature = single_cell[-gap:]
             else:
                 feature = single_cell[feature_index:end_index]
 
-            # 将特征放入内存映射文件中相应的位置
             mmap[cell_index, feature_index // gap, :] = feature
 
-    # 刷新内存映射文件以确保所有数据都写入磁盘
     mmap.flush()
 
     print("gene_embedding.dat mmap.shape", mmap.shape)
@@ -487,7 +469,7 @@ log_dir = "log/" + str(model_name) + "/"+ str(train_config.epoch) + "/" + str("0
 if (not os.path.isdir(log_dir)):
     os.makedirs(log_dir)
 
-emb_mod1s_ = trainer.run() #mod2_logits1s
+emb_mod1s_ = trainer.run()
 
 end = time.time()
 all_time = end - start
