@@ -342,7 +342,6 @@ class Trainer:
 
 
 def GeneEmbeding(X, gap):
-    # gap = 10240
     single_cell_list = []
     for single_cell in X:
         feature = []
@@ -362,9 +361,8 @@ def GeneEmbeding(X, gap):
 
 def getXY2(mod_paths, mod_names, gap):
 
-    adata_mod = sc.read_h5ad(mod_paths[0] + "Leaf_1_2_9_all_8000_BatchExper.h5ad") #
+    adata_mod = sc.read_h5ad("Leaf_Pretrained.h5ad") #
 
-    # step1: 获得两种模态数据并且进行预处理
     adata_mod1 = sc.read_h5ad(mod_paths[0] + mod_names[0])
 
     adata_mod1.var_names_make_unique()
@@ -383,10 +381,6 @@ def getXY2(mod_paths, mod_names, gap):
 
     labels = adata_mod1.obs['Celltype']
     return X1,Y1,labels
-
-#05SRP292306
-#1e-5
-
 
 import time
 gap = 128
@@ -422,7 +416,6 @@ model_config.mod2_dim = Y1.shape[1]
 print("model_config.mod2_dim ", model_config.mod2_dim)
 print("model_config.vocab_size", model_config.vocab_size)
 premodel = GPT(model_config)
-# 加载保存的模型状态字典
 pre_train_model_name = "Leaf_1_2_9_all_8000_BatchExper" #
 
 pre_epoch = 100
@@ -452,17 +445,14 @@ np.save(log_dir+"emb_mod1s.npy",emb_mod1s_)
 import numpy as np
 from sklearn.metrics import accuracy_score
 from sklearn.linear_model import LogisticRegression
-# 创建K近邻分类器
 
 from sklearn.model_selection import train_test_split
 
 models = {
     'Logistic Regression 1': LogisticRegression(random_state=2024),
 }
-# Logistic Regression 1 Accuracy: 0.9634834933849895 f1: 0.558902770058707
-# Logistic Regression 1 Accuracy: 0.9654085911821376 f1: 0.6780949710781439
-# Logistic Regression 1 Accuracy: 0.9687348583377962 f1: 0.7047504130472284
-for test_size in [0.99,0.9,0.8]:
+
+for test_size in [0.99]:
     X_train, X_test, y_train, y_test = train_test_split(emb_mod1s_, labels, test_size=test_size, random_state=2024)
 
     for name, model in models.items():
