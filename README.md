@@ -36,3 +36,14 @@ To set up the project and install the required packages:
    ```bash
    git clone https://github.com/your_username/project_name.git
    cd project_name
+
+### `requirements.txt`
+
+```txt
+torch
+scanpy
+scikit-learn
+geomloss
+tqdm
+numpy
+pandas
