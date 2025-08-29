@@ -28,14 +28,6 @@ This project provides tools for cross-dataset cell-type annotation, pre-training
 - `model/`: Python scripts for cell-type annotation and model training:
   - `pre_train_all.py`: Script for pre-training models across different single-cell datasets, using custom neural network layers for embedding and processing the data. It is optimized for large-scale data, including plant-specific models such as `scPlantGPT_v1`.
 
-## Installation
-
-To set up the project and install the required packages:
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your_username/project_name.git
-   cd project_name
 
 ### `requirements.txt`
 
