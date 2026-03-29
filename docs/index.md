@@ -15,13 +15,13 @@ scPlantFormer provides tools for cross-dataset cell-type annotation, model pre-t
 
 ## Quick links
 
-- GitHub README: `README.md`
+- Project README: `README.md`
 - Tutorials:
   - `Tutorial/Integration_batch.ipynb`
   - `Tutorial/Integration_species.ipynb`
   - `Tutorial/Integration_tissues.ipynb`
   - `Tutorial/Integration_scRNA_scATAC.ipynb`
 
-```{note}
-This Read the Docs setup is intentionally minimal. You can expand it later with API docs, notebook rendering, and usage guides.
-```
+!!! note
+    This Read the Docs setup is intentionally minimal. You can expand it later with API docs,
+    notebook rendering, and usage guides.
