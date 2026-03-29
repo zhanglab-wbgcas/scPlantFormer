@@ -49,3 +49,10 @@ tqdm
 numpy
 pandas
 ```
+
+## Build Documentation Locally
+
+```bash
+pip install -r docs/requirements.txt
+mkdocs build --strict
+```
