@@ -1,0 +1,8 @@
+site_name: scPlantFormer
+site_description: Documentation for scPlantFormer single-cell integration and annotation workflows
+repo_url: https://github.com/<your-org>/scPlantFormer
+docs_dir: docs
+theme:
+  name: material
+nav:
+  - Home: index.md
